@@ -4,6 +4,8 @@ import com.mandacarubroker.domain.stock.RequestStockDTO;
 import com.mandacarubroker.domain.stock.Stock;
 import com.mandacarubroker.service.StockService;
 import java.util.List;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -53,24 +55,22 @@ public class StockController {
      * @return ResponseEntity contendo a ação criada e código de status HTTP apropriado.
      */
     @PostMapping
-    public ResponseEntity<Stock> createStock(@RequestBody RequestStockDTO data) {
+    public ResponseEntity<Stock> createStock(@Valid @RequestBody RequestStockDTO data) {
         Stock createdStock = stockService.createStock(data);
         return ResponseEntity.ok(createdStock);
     }
 
     /**
      * Atualiza uma ação existente com base no ID.
-     * @return ResponseEntity contendo o objeto
-     * Stock atualizado e o código de status respectivamente.
+     * @return ResponseEntity contendo o objeto Stock atualizado e o código de status correspondente.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Stock> updateStock(
-            @PathVariable String id, @RequestBody Stock updatedStock) {
+    public ResponseEntity<Stock> updateStock(@PathVariable String id, @Valid @RequestBody Stock updatedStock) {
         try {
-            Stock result = stockService.updateStock(id, updatedStock);
+            Optional<Stock> result = stockService.updateStock(id, updatedStock);
 
-            if (result != null) {
-                return ResponseEntity.ok(result);
+            if (result.isPresent()) {
+                return ResponseEntity.ok(result.get());
             } else {
                 return ResponseEntity.notFound().build();
             }
@@ -82,9 +82,9 @@ public class StockController {
     /**
      * Exclui uma ação com base no ID.
      * @param id ID da ação a ser excluída.
-     */@DeleteMapping("/{id}")
+     */
+    @DeleteMapping("/{id}")
     public void deleteStock(@PathVariable String id) {
         stockService.deleteStock(id);
     }
-
 }

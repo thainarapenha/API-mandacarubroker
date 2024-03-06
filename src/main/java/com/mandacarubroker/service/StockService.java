@@ -39,19 +39,23 @@ public class StockService {
         return stockRepository.save(novaAcao);
     }
 
-    public Stock updateStock(String id, Stock updatedStock) {
-        Optional<Stock> optionalStock = stockRepository.findById(id);
-
-        if (optionalStock.isPresent()) {
-            Stock stock = optionalStock.get();
-            stock.setSymbol(updatedStock.getSymbol());
-            stock.setCompanyName(updatedStock.getCompanyName());
-            stock.setPrice(updatedStock.getPrice());
-
-            return stockRepository.save(stock);
-        } else {
-            return null;
+    public Optional<Stock> updateStock(String id, Stock updatedStock) {
+        if (updatedStock == null || updatedStock.getPrice() < 0) {
+            return Optional.empty();
         }
+
+        return stockRepository.findById(id)
+                .map(stock -> {
+                    stock.setSymbol(updatedStock.getSymbol());
+                    stock.setCompanyName(updatedStock.getCompanyName());
+
+                    if (updatedStock.getPrice() >= 0) {
+                        stock.setPrice(updatedStock.getPrice());
+                        return stockRepository.save(stock);
+                    } else {
+                        return stock;
+                    }
+                });
     }
 
     public void deleteStock(String id) {
@@ -59,27 +63,21 @@ public class StockService {
     }
 
     public static void validateRequestStockDTO(RequestStockDTO data) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<RequestStockDTO>> violations = validator.validate(data);
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<RequestStockDTO>> violations = validator.validate(data);
 
-        if (!violations.isEmpty()) {
-            StringBuilder errorMessage = new StringBuilder("Validation failed. Details: ");
+            if (!violations.isEmpty()) {
+                StringBuilder errorMessage = new StringBuilder("Validation failed. Details: ");
 
-            for (ConstraintViolation<RequestStockDTO> violation : violations) {
-                errorMessage.append(String.format("[%s: %s], ", violation.getPropertyPath(), violation.getMessage()));
+                for (ConstraintViolation<RequestStockDTO> violation : violations) {
+                    errorMessage.append(String.format("[%s: %s], ", violation.getPropertyPath(), violation.getMessage()));
+                }
+
+                errorMessage.delete(errorMessage.length() - 2, errorMessage.length());
+
+                throw new ConstraintViolationException(errorMessage.toString(), violations);
             }
-
-            errorMessage.delete(errorMessage.length() - 2, errorMessage.length());
-
-            throw new ConstraintViolationException(errorMessage.toString(), violations);
         }
-    }
-
-    public void validateAndCreateStock(RequestStockDTO data) {
-        validateRequestStockDTO(data);
-
-        Stock novaAcao = new Stock(data);
-        stockRepository.save(novaAcao);
     }
 }
