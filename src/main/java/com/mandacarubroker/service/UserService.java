@@ -38,7 +38,12 @@ public class UserService {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            user.setName(updatedUser.getName());
+            user.setEmail(updatedUser.getEmail());
+            user.setPassword(updatedUser.getPassword());
+            user.setFirstName(updatedUser.getFirstName());
+            user.setLastName(updatedUser.getLastName());
+            user.setBirthDate(updatedUser.getBirthDate());
+            user.setBalance(updatedUser.getBalance());
 
             return userRepository.save(user);
         } else {
