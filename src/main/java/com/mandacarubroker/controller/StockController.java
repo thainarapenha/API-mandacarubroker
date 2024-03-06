@@ -1,31 +1,27 @@
 package com.mandacarubroker.controller;
 
-import com.mandacarubroker.domain.stock.Stock;
 import com.mandacarubroker.domain.stock.RequestStockDTO;
+import com.mandacarubroker.domain.stock.Stock;
 import com.mandacarubroker.service.StockService;
-
-import org.springframework.http.ResponseEntity;
+import java.util.List;
 import org.springframework.http.HttpStatus;
-
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/stocks")
 public class StockController {
-
     private final StockService stockService;
 
     /**
-     * Construtor que injeta o serviço de ações
+     * Construtor que injeta o serviço de ações.
      * @param stockService Serviço de ações a ser injetado.
      */
     public StockController(StockService stockService) {
@@ -43,7 +39,8 @@ public class StockController {
 
     /**
      * Retorna uma ação pelo ID.
-     * @return ResponseEntity contendo o objeto Stock se encontrado e o código de status respectivamente.
+     * @return ResponseEntity contendo o objeto Stock se
+     * encontrado e o código de status respectivamente.
      */
     @GetMapping("/{id}")
     public ResponseEntity<Stock> getStockById(@PathVariable String id) {
@@ -63,10 +60,12 @@ public class StockController {
 
     /**
      * Atualiza uma ação existente com base no ID.
-     * @return ResponseEntity contendo o objeto Stock atualizado e o código de status respectivamente.
+     * @return ResponseEntity contendo o objeto
+     * Stock atualizado e o código de status respectivamente.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Stock> updateStock(@PathVariable String id, @RequestBody Stock updatedStock) {
+    public ResponseEntity<Stock> updateStock(
+            @PathVariable String id, @RequestBody Stock updatedStock) {
         try {
             Stock result = stockService.updateStock(id, updatedStock);
 
@@ -79,7 +78,6 @@ public class StockController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 
     /**
      * Exclui uma ação com base no ID.
