@@ -25,9 +25,4 @@ public class Stock {
         this.companyName = requestStockDTO.companyName();
         this.price = requestStockDTO.price();
     }
-
-    public double changePrice(double newPrice) {
-        return newPrice;
-    }
-
 }

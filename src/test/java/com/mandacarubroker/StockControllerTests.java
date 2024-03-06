@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class ControllerTests {
+class StockControllerTests {
 
     // Injeção de dependências necessárias para os testes
     @Autowired
@@ -147,5 +147,69 @@ class ControllerTests {
     void canNotDeleteAllStocks() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/stocks"))
                 .andExpect(MockMvcResultMatchers.status().isMethodNotAllowed());
+    }
+
+    /**
+     * Testa se a criação de uma ação com dados inválidos retorna um status HTTP Bad Request (400)
+     */
+    @Test
+    void createStockWithInvalidData() throws Exception {
+        RequestStockDTO invalidStock = new RequestStockDTO("INVALID", "Invalid Stock", -1.0);
+
+        String requestJson = objectMapper.writeValueAsString(invalidStock);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/stocks")
+                        .content(requestJson)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Testa se a atualização de uma ação inexistente retorna um status HTTP Not Found (404)
+     */
+    @Test
+    void updateNonexistentStock() throws Exception {
+        Stock nonExistentStock = new Stock("nonexistent-id", "NONEXIST", "Nonexistent Stock", 10.0);
+
+        String requestJson = objectMapper.writeValueAsString(nonExistentStock);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/stocks/{id}", nonExistentStock.getId())
+                        .content(requestJson)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    /**
+     * Testa se a exclusão de uma ação inexistente retorna um status HTTP Not Found (404)
+     */
+    @Test
+    void deleteNonexistentStock() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/stocks/{id}", "nonexistent-id"))
+                .andExpect(status().isNotFound());
+    }
+
+    /**
+     * Testa se a exclusão de uma ação com ID inválido retorna um status HTTP Bad Request (400)
+     */
+    @Test
+    void deleteStockWithInvalidId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/stocks/{id}", "invalid-id"))
+                .andExpect(status().isBadRequest());
+    }
+
+    /**
+     * Testa se a atualização de uma ação com dados inválidos retorna um status HTTP Bad Request (400)
+     */
+    @Test
+    void updateStockWithInvalidData() throws Exception {
+        Stock existingStock = stockRepository.findAll().get(0);
+        existingStock.setPrice(-1.0);
+
+        String requestJson = objectMapper.writeValueAsString(existingStock);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/stocks/{id}", existingStock.getId())
+                        .content(requestJson)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }
