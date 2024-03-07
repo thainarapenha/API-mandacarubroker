@@ -1,6 +1,11 @@
 package com.mandacarubroker.domain.stock;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +21,6 @@ public class Stock {
 
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
     private String symbol;
     private String companyName;
     private double price;
@@ -26,9 +30,4 @@ public class Stock {
         this.companyName = requestStockDTO.companyName();
         this.price = requestStockDTO.price();
     }
-
-    public double changePrice(double newPrice) {
-        return newPrice;
-    }
-
 }
