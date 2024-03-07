@@ -1,6 +1,10 @@
-CREATE TABLE users(
-                       id TEXT PRIMARY KEY UNIQUE NOT NULL,
-                       username TEXT NOT NULL UNIQUE,
-                       password TEXT NOT NULL,
-                       role TEXT NOT NULL
+CREATE TABLE users (
+                       id varchar(255) primary key,
+                       email varchar(255) not null unique,
+                       username varchar(255) not null unique,
+                       password varchar(255) not null,
+                       first_name varchar(255) not null,
+                       last_name varchar(255),
+                       birth_date date not null,
+                       balance decimal not null
 );

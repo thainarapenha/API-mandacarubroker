@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+import java.time.LocalDate;
+
 @Table(name ="users")
 @Entity(name = "users")
 @Data
@@ -24,10 +26,25 @@ public class User implements UserDetails {
     private String id;
     private String username;
     private String password;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private LocalDate birthDate;
+    private Double balance;
     private UserRole role;
 
-    public User(String username, String password, UserRole role) {
 
+    public User(RequestUserDTO requestUserDTO) {
+        this.username = requestUserDTO.username();
+        this.password = requestUserDTO.password();
+        this.email = requestUserDTO.email();
+        this.firstName = requestUserDTO.firstName();
+        this.lastName = requestUserDTO.lastName();
+        this.birthDate = requestUserDTO.birthDate();
+        this.balance = requestUserDTO.balance();
+    }
+  
+    public User(String username, String password, UserRole role) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -63,6 +80,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
 }
