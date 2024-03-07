@@ -26,6 +26,28 @@ public class StockPortfolioService {
                 .collect(Collectors.toList());
     }
 
+    public UserStockPortfolio getUserStockPortfolio(String userId) {
+        List<UserStockPortfolio> userStockPortfolioList = userStockPortfolioRepository.findByUserId(userId);
+
+        if (userStockPortfolioList.isEmpty()) {
+            throw new RuntimeException("Ação não foi encontrada na carteira do usuário: " + userId);
+        }
+
+        return userStockPortfolioList.get(0);
+    }
+
+    public void deposit(String userId, double amount) throws Exception {
+        UserStockPortfolio userStockPortfolio = getUserStockPortfolio(userId);
+        userStockPortfolio.getUser().deposit(amount);
+        userStockPortfolioRepository.save(userStockPortfolio);
+    }
+
+    public void withdraw(String userId, double amount) throws Exception {
+        UserStockPortfolio userStockPortfolio = getUserStockPortfolio(userId);
+        userStockPortfolio.getUser().withdraw(amount);
+        userStockPortfolioRepository.save(userStockPortfolio);
+    }
+
     public double getUserPortfolioBalance(String userId) {
         List<UserStockPortfolio> userStockOwnershipList = userStockPortfolioRepository.findByUserId(userId);
 

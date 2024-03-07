@@ -31,11 +31,13 @@ public class UserStockPortfolio {
     @OneToOne
     private User user;
 
+
     public UserStockPortfolio(final RequestUserStockPortfolioDTO requestUserStockPortfolioDTO, final Stock paramsStockReceved, final User paramsUserReceved) {
         this.companyActions = requestUserStockPortfolioDTO.companiesActions();
         this.stock = paramsStockReceved;
         this.user = paramsUserReceved;
     }
+
 
     public double getTotalValueCompaniesActions() {
         return companyActions * stock.getPrice();
@@ -44,5 +46,6 @@ public class UserStockPortfolio {
     public Stock getCompanies() {
         return stock;
     }
+
 
 }
