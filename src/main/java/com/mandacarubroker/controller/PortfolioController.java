@@ -17,9 +17,9 @@ public class PortfolioController {
         this.stockPortfolioService = receivedPortfolioService;
     }
 
-    @GetMapping
-    public List<ResponseUserStockPortfolio> getAuthenticatedUserStockPortfolio() {
-        return stockPortfolioService.getAuthenticatedUserStockPortfolio("userId");
+    @GetMapping("/{userId}")
+    public List<ResponseUserStockPortfolio> getAuthenticatedUserStockPortfolio(@PathVariable String userId) {
+        return stockPortfolioService.getAuthenticatedUserStockPortfolio(userId);
     }
 
     @PostMapping("/deposit")
