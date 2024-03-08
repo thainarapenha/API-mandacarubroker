@@ -44,8 +44,21 @@ public class User implements UserDetails {
         this.email = requestUserDTO.email();
         this.firstName = requestUserDTO.firstName();
         this.lastName = requestUserDTO.lastName();
+        this.role = requestUserDTO.role();
         this.birthDate = requestUserDTO.birthDate();
         this.balance = requestUserDTO.balance();
+    }
+
+    public User(String username, String password, String email,
+                String firstName, String lastName, UserRole role, LocalDate birthDate, Double balance) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.birthDate = birthDate;
+        this.balance = balance;
     }
   
     public User(String username, String password, UserRole role) {

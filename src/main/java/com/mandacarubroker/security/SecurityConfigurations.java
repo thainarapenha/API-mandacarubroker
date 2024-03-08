@@ -28,6 +28,7 @@ public class SecurityConfigurations {
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/portfolio/deposit").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST, "/stocks").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.GET, "/stocks").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")

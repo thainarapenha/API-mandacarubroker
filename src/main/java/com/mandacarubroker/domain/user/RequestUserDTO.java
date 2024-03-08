@@ -17,6 +17,8 @@ public record RequestUserDTO (
         String firstName,
         @NotBlank(message = "Last name cannot be blank")
         String lastName,
+        @NotNull(message = "role cannot be null")
+        UserRole role,
 
         @Past(message = "The date must be in the past")
         LocalDate birthDate,
