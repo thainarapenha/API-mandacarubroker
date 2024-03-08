@@ -1,5 +1,6 @@
 package com.mandacarubroker.controller;
 
+import com.mandacarubroker.domain.userActions.RequestPortifolioDTO;
 import com.mandacarubroker.domain.userActions.ResponseUserStockPortfolio;
 import com.mandacarubroker.service.StockPortfolioService;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +24,9 @@ public class PortfolioController {
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity<String> deposit(@RequestParam String userId, @RequestParam double amount) {
+    public ResponseEntity<String> deposit(@RequestBody RequestPortifolioDTO data) {
         try {
-            stockPortfolioService.deposit(userId, amount);
+            stockPortfolioService.deposit(data.userId(), data.amount());
             return ResponseEntity.ok("Depósito realizado com sucesso.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -33,9 +34,9 @@ public class PortfolioController {
     }
 
     @PostMapping("/withdraw")
-    public ResponseEntity<String> withdraw(@RequestParam String userId, @RequestParam double amount) {
+    public ResponseEntity<String> withdraw(@RequestBody RequestPortifolioDTO data) {
         try {
-            stockPortfolioService.withdraw(userId, amount);
+            stockPortfolioService.withdraw(data.userId(), data.amount());
             return ResponseEntity.ok("Saque realizado com sucesso.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
